@@ -1,0 +1,9 @@
+{
+  "BaseUrl": "https://example.com",
+  "LoginUrl": "https://example.com/login",
+  "StartExamUrl": "https://example.com/exam/az-900/questions",
+  "Email": "your_login_email_here",
+  "Password": "your_password_here",
+  "OutputFolder": "output",
+  "DelayBetweenRequestsMs": 700
+}

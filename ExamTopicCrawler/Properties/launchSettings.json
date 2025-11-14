@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ExamTopicCrawler": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
