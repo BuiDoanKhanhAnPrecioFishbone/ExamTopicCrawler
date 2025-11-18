@@ -2,6 +2,7 @@
   "BaseUrl": "https://www.examtopics.com/",
   "LoginUrl": "https://example.com/login",
   "StartExamUrl": "https://www.examtopics.com/exams/microsoft/az-204/view/",
+  "SettingExamUrl": "https://www.examtopics.com/exams/microsoft/ai-102/custom-view/",
   "Email": "chau.huynh.thi.bao@preciofishbone.se",
   "Password": "Fh3A*VFI$O&7Z5nd'2N{",
   "OutputFolder": "az204",

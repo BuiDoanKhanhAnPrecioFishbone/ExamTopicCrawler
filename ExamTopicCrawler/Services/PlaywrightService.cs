@@ -94,7 +94,42 @@ namespace ExamTopicCrawler.Services
                 throw;
             }
         }
-
+        public async Task SettingExam(string settingUrl)
+        {
+            Console.WriteLine($"Navigating to: {settingUrl}");
+            await Page.GotoAsync($"{settingUrl}");
+            await Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+            
+            // Wait for the question count range input
+            var questionRangeInput = await Page.WaitForSelectorAsync("#QuestionCount", new() { Timeout = 10000 });
+            
+            if (questionRangeInput != null)
+            {
+                Console.WriteLine("Setting questions per page to maximum (50)...");
+                
+                // Set the range input to max value (50)
+                await Page.FillAsync("#QuestionCount", "50");
+                
+                // Alternative approach using evaluate if fill doesn't work:
+                // await Page.EvaluateAsync("document.getElementById('QuestionCount').value = '50'");
+                // await Page.EvaluateAsync("updatePerPageInput(50);");
+                
+                await Task.Delay(500); // Wait for any UI updates
+                
+                // Click the submit button to save settings
+                Console.WriteLine("Saving settings...");
+                await Page.ClickAsync("button.btn-primary[type='submit']");
+                
+                // Wait for settings to be saved
+                await Task.Delay(2000);
+                
+                Console.WriteLine("✓ Settings saved successfully!");
+            }
+            else
+            {
+                Console.WriteLine("❌ Could not find question count input");
+            }
+        }
         public async Task TriggerLoginModalAsync()
         {
             // If login modal doesn't auto-show, this can trigger it

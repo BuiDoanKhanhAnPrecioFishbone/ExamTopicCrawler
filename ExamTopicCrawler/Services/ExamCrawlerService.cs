@@ -252,7 +252,7 @@ namespace ExamTopicCrawler.Services
                 var answerImage = await correctAnswerSpan.QuerySelectorAsync("img");
                 if (answerImage != null)
                 {
-                    question.CorrectAnswer = "[IMAGE: " + (await answerImage.GetAttributeAsync("src")) + "]";
+                    question.CorrectAnswerImageUrl = await answerImage.GetAttributeAsync("src") ?? "";
                 }
                 else
                 {

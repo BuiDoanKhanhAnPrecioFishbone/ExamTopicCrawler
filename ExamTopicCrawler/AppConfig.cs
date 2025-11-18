@@ -5,6 +5,7 @@ public class AppConfig
     public string BaseUrl { get; set; }
     public string LoginUrl { get; set; }
     public string StartExamUrl { get; set; }
+    public string SettingExamUrl { get; set; }
     public string Email { get; set; }
     public string Password { get; set; }
     public int DelayBetweenRequestsMs { get; set; }

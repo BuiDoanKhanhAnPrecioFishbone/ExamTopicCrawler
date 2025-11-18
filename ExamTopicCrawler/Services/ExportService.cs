@@ -19,6 +19,14 @@ namespace ExamTopicCrawler.Services
 
         public void Save(List<QuestionItem> items)
         {
+            // Clean whitespace from all questions before saving
+            Console.WriteLine("Cleaning whitespace from questions...");
+            foreach (var item in items)
+            {
+                item.CleanWhitespace();
+                item.FixImageUrls();
+            }
+
             Directory.CreateDirectory(_config.OutputFolder);
 
             string path = Path.Combine(_config.OutputFolder, "exam.json");
