@@ -1,9 +1,9 @@
 {
-  "BaseUrl": "https://example.com",
+  "BaseUrl": "https://www.examtopics.com/",
   "LoginUrl": "https://example.com/login",
-  "StartExamUrl": "https://example.com/exam/az-900/questions",
-  "Email": "your_login_email_here",
-  "Password": "your_password_here",
-  "OutputFolder": "output",
+  "StartExamUrl": "https://www.examtopics.com/exams/microsoft/az-204/view/",
+  "Email": "chau.huynh.thi.bao@preciofishbone.se",
+  "Password": "Fh3A*VFI$O&7Z5nd'2N{",
+  "OutputFolder": "az204",
   "DelayBetweenRequestsMs": 700
 }
