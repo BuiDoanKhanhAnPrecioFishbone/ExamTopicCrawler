@@ -58,6 +58,8 @@ namespace ExamTopicCrawler.Models
                 {
                     option.Letter = CleanText(option.Letter);
                     option.Text = CleanText(option.Text);
+                    // Remove voting indicators from option text
+                    option.Text = RemoveVotingIndicators(option.Text);
                 }
             }
 
@@ -168,6 +170,22 @@ namespace ExamTopicCrawler.Models
             text = text.Replace("\t", " ");
 
             return text;
+        }
+
+        private static string RemoveVotingIndicators(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            // Remove common voting indicators that appear in options
+            // Patterns: "Most Voted", "Highly Voted", "Community Vote", etc.
+            text = Regex.Replace(text, @"\s*\n\s*Most\s+Voted\s*$", "", RegexOptions.IgnoreCase);
+            text = Regex.Replace(text, @"\s*\n\s*Highly\s+Voted\s*$", "", RegexOptions.IgnoreCase);
+            text = Regex.Replace(text, @"\s*\n\s*Community\s+Vote\s*$", "", RegexOptions.IgnoreCase);
+            text = Regex.Replace(text, @"\s*Most\s+Voted\s*$", "", RegexOptions.IgnoreCase);
+            text = Regex.Replace(text, @"\s*Highly\s+Voted\s*$", "", RegexOptions.IgnoreCase);
+            
+            return text.Trim();
         }
     }
 }
