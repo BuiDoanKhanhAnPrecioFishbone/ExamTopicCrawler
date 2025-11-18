@@ -28,7 +28,7 @@ namespace ExamTopicCrawler.Services
             {
                 Console.WriteLine($"Navigating to: {_config.StartExamUrl}");
                 await _playwright.Page.GotoAsync(_config.StartExamUrl, new() { Timeout = 60000 });
-                await _playwright.Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+                await _playwright.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
 
                 int pageNumber = 1;
                 bool hasMorePages = true;
