@@ -14,13 +14,30 @@ namespace ExamTopicCrawler.Models
         public string DataId { get; set; }
         public string QuestionText { get; set; }
         public List<AnswerOption> Options { get; set; }
+        
+        // Legacy fields (kept for backward compatibility)
         public string CorrectAnswer { get; set; }
         public string CorrectAnswerImageUrl { get; set; }
+        
+        // New answer fields aligned with ms-exam-tester database
+        public string OriginalAnswer { get; set; }
+        public string PrecioAnswer { get; set; }
+        public string OriginalAnswerImageUrl { get; set; }
+        public string PrecioAnswerImageUrl { get; set; }
+        public bool IsPrecioVerified { get; set; }
+        
         public string AnswerDescription { get; set; }
         public int DiscussionCount { get; set; }
         public List<VotedAnswer> VotedAnswers { get; set; }
         public List<DiscussionItem> Discussions { get; set; }
         public string Url { get; set; }
+        
+        // Additional fields for database sync
+        public int OriginalOrder { get; set; }
+        public int TopicQuestionNumber { get; set; }
+        public string ExamTopicsId { get; set; }
+        public bool AppearedInRealExam { get; set; }
+        public bool IsUnofficial { get; set; }
     }
 
     public class AnswerOption
@@ -45,12 +62,22 @@ namespace ExamTopicCrawler.Models
         {
             question.QuestionText = CleanText(question.QuestionText);
             question.AnswerDescription = CleanText(question.AnswerDescription);
+            
+            // Clean legacy fields
             question.CorrectAnswer = CleanText(question.CorrectAnswer);
             question.CorrectAnswerImageUrl = CleanText(question.CorrectAnswerImageUrl);
+            
+            // Clean new answer fields
+            question.OriginalAnswer = CleanText(question.OriginalAnswer);
+            question.PrecioAnswer = CleanText(question.PrecioAnswer);
+            question.OriginalAnswerImageUrl = CleanText(question.OriginalAnswerImageUrl);
+            question.PrecioAnswerImageUrl = CleanText(question.PrecioAnswerImageUrl);
+            
             question.QuestionNumber = CleanText(question.QuestionNumber);
             question.Topic = CleanText(question.Topic);
             question.DataId = CleanText(question.DataId);
             question.Url = CleanText(question.Url);
+            question.ExamTopicsId = CleanText(question.ExamTopicsId);
 
             if (question.Options != null)
             {
@@ -86,8 +113,16 @@ namespace ExamTopicCrawler.Models
         {
             question.QuestionText = FixImagesInText(question.QuestionText);
             question.AnswerDescription = FixImagesInText(question.AnswerDescription);
+            
+            // Fix legacy fields
             question.CorrectAnswer = FixImagesInText(question.CorrectAnswer);
             question.CorrectAnswerImageUrl = FixImageUrl(question.CorrectAnswerImageUrl);
+            
+            // Fix new answer fields
+            question.OriginalAnswer = FixImagesInText(question.OriginalAnswer);
+            question.PrecioAnswer = FixImagesInText(question.PrecioAnswer);
+            question.OriginalAnswerImageUrl = FixImageUrl(question.OriginalAnswerImageUrl);
+            question.PrecioAnswerImageUrl = FixImageUrl(question.PrecioAnswerImageUrl);
 
             if (question.Options != null)
             {

@@ -168,7 +168,9 @@ namespace ExamTopicCrawler.Services
             {
                 Options = new List<AnswerOption>(),
                 VotedAnswers = new List<VotedAnswer>(),
-                Discussions = new List<DiscussionItem>()
+                Discussions = new List<DiscussionItem>(),
+                AppearedInRealExam = false,  // Default to false, can be updated manually later
+                IsUnofficial = false  // ExamTopics questions are official
             };
 
             // Extract question number and topic from header
@@ -182,11 +184,12 @@ namespace ExamTopicCrawler.Services
                 question.Topic = topicSpan != null ? (await topicSpan.TextContentAsync())?.Trim() ?? "" : "";
             }
 
-            // Extract data-id from question body
+            // Extract data-id from question body (this is the ExamTopics ID)
             var questionBody = await card.QuerySelectorAsync(".question-body");
             if (questionBody != null)
             {
                 question.DataId = await questionBody.GetAttributeAsync("data-id") ?? "";
+                question.ExamTopicsId = question.DataId; // Set ExamTopics ID for database sync
             }
 
             // Extract question text
@@ -252,11 +255,15 @@ namespace ExamTopicCrawler.Services
                 var answerImage = await correctAnswerSpan.QuerySelectorAsync("img");
                 if (answerImage != null)
                 {
-                    question.CorrectAnswerImageUrl = await answerImage.GetAttributeAsync("src") ?? "";
+                    var imageUrl = await answerImage.GetAttributeAsync("src") ?? "";
+                    question.CorrectAnswerImageUrl = imageUrl; // Legacy field
+                    question.OriginalAnswerImageUrl = imageUrl; // New field
                 }
                 else
                 {
-                    question.CorrectAnswer = (await correctAnswerSpan.TextContentAsync())?.Trim() ?? "";
+                    var answerText = (await correctAnswerSpan.TextContentAsync())?.Trim() ?? "";
+                    question.CorrectAnswer = answerText; // Legacy field
+                    question.OriginalAnswer = answerText; // New field
                 }
             }
 

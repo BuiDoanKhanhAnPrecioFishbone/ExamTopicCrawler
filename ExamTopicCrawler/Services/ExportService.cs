@@ -27,6 +27,25 @@ namespace ExamTopicCrawler.Services
                 item.FixImageUrls();
             }
 
+            // Assign original order and topic question numbers
+            Console.WriteLine("Assigning question order and topic numbering...");
+            var topicCounters = new Dictionary<string, int>();
+            
+            for (int i = 0; i < items.Count; i++)
+            {
+                // Set original order (1-based index)
+                items[i].OriginalOrder = i + 1;
+                
+                // Track topic question numbers
+                var topic = items[i].Topic ?? "Unknown";
+                if (!topicCounters.ContainsKey(topic))
+                {
+                    topicCounters[topic] = 0;
+                }
+                topicCounters[topic]++;
+                items[i].TopicQuestionNumber = topicCounters[topic];
+            }
+
             Directory.CreateDirectory(_config.OutputFolder);
 
             string path = Path.Combine(_config.OutputFolder, "exam.json");
@@ -38,6 +57,7 @@ namespace ExamTopicCrawler.Services
             File.WriteAllText(path, json);
 
             Console.WriteLine($"Saved {items.Count} questions to {path}");
+            Console.WriteLine($"Questions span {topicCounters.Count} topics");
         }
     }
 }
