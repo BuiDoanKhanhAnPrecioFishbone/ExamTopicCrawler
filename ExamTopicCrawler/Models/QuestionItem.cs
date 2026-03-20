@@ -212,14 +212,20 @@ namespace ExamTopicCrawler.Models
             if (string.IsNullOrEmpty(text))
                 return text;
 
-            // Remove common voting indicators that appear in options
+            // Remove common voting indicators that appear as plain text at the end of options
             // Patterns: "Most Voted", "Highly Voted", "Community Vote", etc.
             text = Regex.Replace(text, @"\s*\n\s*Most\s+Voted\s*$", "", RegexOptions.IgnoreCase);
             text = Regex.Replace(text, @"\s*\n\s*Highly\s+Voted\s*$", "", RegexOptions.IgnoreCase);
             text = Regex.Replace(text, @"\s*\n\s*Community\s+Vote\s*$", "", RegexOptions.IgnoreCase);
             text = Regex.Replace(text, @"\s*Most\s+Voted\s*$", "", RegexOptions.IgnoreCase);
             text = Regex.Replace(text, @"\s*Highly\s+Voted\s*$", "", RegexOptions.IgnoreCase);
-            
+
+            // Remove HTML-wrapped voting indicator elements that may appear in innerHTML
+            // e.g. <span class="badge badge-primary">Most Voted</span>
+            text = Regex.Replace(text, @"<[^>]+>\s*Most\s+Voted\s*</[^>]+>", "", RegexOptions.IgnoreCase);
+            text = Regex.Replace(text, @"<[^>]+>\s*Highly\s+Voted\s*</[^>]+>", "", RegexOptions.IgnoreCase);
+            text = Regex.Replace(text, @"<[^>]+>\s*Community\s+Vote\s*</[^>]+>", "", RegexOptions.IgnoreCase);
+
             return text.Trim();
         }
     }

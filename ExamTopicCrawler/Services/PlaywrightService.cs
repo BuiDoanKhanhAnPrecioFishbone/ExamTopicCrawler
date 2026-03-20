@@ -108,7 +108,7 @@ namespace ExamTopicCrawler.Services
                 Console.WriteLine("Setting questions per page to maximum (50)...");
                 
                 // Set the range input to max value (50)
-                await Page.FillAsync("#QuestionCount", "50");
+                await Page.FillAsync("#QuestionCount", "20");
                 
                 // Alternative approach using evaluate if fill doesn't work:
                 // await Page.EvaluateAsync("document.getElementById('QuestionCount').value = '50'");

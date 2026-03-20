@@ -233,11 +233,36 @@ namespace ExamTopicCrawler.Services
             {
                 var letterSpan = await item.QuerySelectorAsync(".multi-choice-letter");
                 var letter = letterSpan != null ? (await letterSpan.GetAttributeAsync("data-choice-letter")) ?? "" : "";
-                
-                var text = await item.TextContentAsync();
-                text = text?.Replace(letter + ".", "").Trim() ?? "";
 
-                var isCorrect = (await item.GetAttributeAsync("class"))?.Contains("correct-hidden") ?? false;
+                // Use JavaScript to get innerHTML after removing the letter span.
+                // This preserves HTML content (images, formatted text) in options,
+                // which is important because the app renders option.Text with dangerouslySetInnerHTML.
+                // Also removes any voting indicator elements (Most Voted badges, etc.).
+                string text;
+                try
+                {
+                    text = await item.EvaluateAsync<string>(@"el => {
+                        const clone = el.cloneNode(true);
+                        // Remove the letter/choice label span
+                        const letterSpan = clone.querySelector('.multi-choice-letter');
+                        if (letterSpan) letterSpan.remove();
+                        // Remove any voting indicator badges/spans
+                        const votingBadges = clone.querySelectorAll('.voted-badge, .most-voted, [class*=""voted""], [class*=""popular""]');
+                        votingBadges.forEach(el => el.remove());
+                        return clone.innerHTML.trim();
+                    }") ?? "";
+                }
+                catch
+                {
+                    // Fallback to plain text extraction if JavaScript evaluation fails
+                    var rawText = await item.TextContentAsync();
+                    text = rawText?.Replace(letter + ".", "").Trim() ?? "";
+                }
+
+                var cssClass = await item.GetAttributeAsync("class") ?? "";
+                // Check for correct answer classes (avoid partial matches like "incorrect")
+                var cssClasses = cssClass.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var isCorrect = cssClasses.Any(c => c == "correct-hidden" || c == "correct");
 
                 question.Options.Add(new AnswerOption
                 {
